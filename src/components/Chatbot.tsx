@@ -29,7 +29,6 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
-      // Memanggil API internal Next.js yang terhubung ke Gemini
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -38,13 +37,15 @@ export default function Chatbot() {
 
       const data = await response.json();
       
-      if (response.ok) {
+      // Mengabaikan pengecekan response.ok agar teks galat asli dari server backend 
+      // bisa langsung tercetak di dalam gelembung chat pembeli.
+      if (data && data.reply) {
         setMessages((prev) => [...prev, { role: 'model', text: data.reply }]);
       } else {
-        setMessages((prev) => [...prev, { role: 'model', text: 'Maaf, sistem kami sedang sibuk. Silakan coba sesaat lagi ya!' }]);
+        setMessages((prev) => [...prev, { role: 'model', text: 'Terjadi kegagalan penafsiran respon data dari backend.' }]);
       }
-    } catch (error) {
-      setMessages((prev) => [...prev, { role: 'model', text: 'Koneksi terputus. Pastikan internet Anda stabil.' }]);
+    } catch (error: any) {
+      setMessages((prev) => [...prev, { role: 'model', text: `Gagal terhubung ke API internal: ${error?.message || 'Unknown Error'}` }]);
     } finally {
       setLoading(false);
     }
