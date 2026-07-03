@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
-
 export async function POST(request: Request) {
   try {
     const { message } = await request.json();
@@ -12,7 +9,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Pesan tidak boleh kosong' }, { status: 400 });
     }
 
-    // Melakukan instruksi khusus agar AI berperan sebagai Asisten Pemasaran produk kalian
+    const apiKey = process.env.GEMINI_API_KEY;
+    
+    if (!apiKey) {
+      return NextResponse.json({ reply: 'Konfigurasi Vercel belum lengkap: GEMINI_API_KEY tidak terbaca di server.' });
+    }
+
+    // Inisialisasi SDK dengan memastikan API Key dibersihkan dari spasi tak terlihat
+    const ai = new GoogleGenAI({ apiKey: apiKey.trim() });
+
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: message,
@@ -36,13 +41,14 @@ export async function POST(request: Request) {
     });
 
     const reply = response.text || 'Maaf, saya tidak dapat memahami pesan tersebut.';
-
     return NextResponse.json({ reply });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Gemini API Error:', error);
+    
+    // Trik debug: Memuntahkan detail error asli ke chat box agar kita tahu persis masalahnya
     return NextResponse.json(
-      { error: 'Terjadi kesalahan pada server internal AI' },
-      { status: 500 }
+      { reply: `Galat Autentikasi: ${error?.message || 'Kunci API ditolak atau server sedang sibuk.'}` },
+      { status: 200 } 
     );
   }
 }
