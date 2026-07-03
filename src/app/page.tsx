@@ -1,7 +1,7 @@
 'use client';
 
 import { avocadoProducts } from '@/data/products';
-import Chatbot from '@/components/chatbot';
+import Chatbot from '@/components/Chatbot';
 
 export default function Home() {
   return (
