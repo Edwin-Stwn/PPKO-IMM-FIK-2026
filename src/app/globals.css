@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Warna latar belakang utama website alami kalian */
+  /* Warna latar belakang utama website alami */
   --background: #fbf9f5;
   --foreground: #1b1c1a;
 }

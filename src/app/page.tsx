@@ -1,6 +1,7 @@
 'use client';
 
 import { avocadoProducts } from '@/data/products';
+import Chatbot from '@/components/Chatbot';
 
 export default function Home() {
   return (
@@ -173,6 +174,7 @@ export default function Home() {
           <h2 className="font-playfair text-2xl md:text-3xl font-bold text-on-surface">Hubungi Asisten Pintar Belanja</h2>
           <p className="text-on-surface-variant text-sm">Masih bingung memilih produk? Hubungi asisten AI pintar kami yang ramah</p>
         </div>
+        <Chatbot /> {/* <-- MASUKKAN DI SINI */}
       </section>
 
       {/* Kaki Halaman / Footer */}
